@@ -1,0 +1,74 @@
+name: Sample CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm run build
+
+  test:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  deploy_staging:
+    needs: test
+    runs-on: windows-latest
+
+    steps:
+      - name: Deploy to staging
+        run: |
+          # Replace this with your actual deployment commands
+          echo "Deploying to staging environment..."
+
+  integration_test:
+    needs: deploy_staging
+    runs-on: windows-latest
+
+    steps:
+      - name: Run integration tests
+        run: |
+          # Replace this with your actual integration test commands
+          echo "Running integration tests on the deployed application..."
+
+  deploy_production:
+    needs: integration_test
+    runs-on: windows-latest
+
+    steps:
+      - name: Deploy to production
+        run: |
+          # Replace this with your actual deployment commands
+          echo "Deploying to production environment..."
