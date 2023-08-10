@@ -19,10 +19,10 @@ jobs:
           dotnet-version: '5.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./Pipeline.sln
+        run: dotnet restore ./pipeline/Pipeline.sln
 
       - name: Build application
-        run: dotnet build ./Pipeline.sln --configuration Release
+        run: dotnet build ./pipeline/Pipeline.sln --configuration Release
 
   test:
     needs: build
@@ -38,10 +38,10 @@ jobs:
           dotnet-version: '5.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./Pipeline.sln
+        run: dotnet restore ./pipeline/Pipeline.sln
 
       - name: Run tests
-        run: dotnet test ./Pipeline.sln --configuration Release
+        run: dotnet test ./pipeline/Pipeline.sln --configuration Release
 
   deploy_staging:
     needs: test
@@ -57,7 +57,7 @@ jobs:
           dotnet-version: '5.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./Pipeline.sln
+        run: dotnet restore ./pipeline/Pipeline.sln
 
       - name: Deploy to staging
         run: |
