@@ -13,16 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup .NET Framework
+        uses: actions/setup-dotnet@v1
         with:
-          node-version: 14
+          dotnet-version: '4.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Restore dependencies
+        run: nuget restore Pipeline.sln
 
       - name: Build application
-        run: npm run build
+        run: msbuild ./Pipeline.sln /p:Configuration=Release
 
   test:
     needs: build
@@ -32,45 +32,45 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup .NET Framework
+        uses: actions/setup-dotnet@v1
         with:
-          node-version: 14
+          dotnet-version: '4.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Restore dependencies
+        run: nuget ./Pipeline.sln
 
       - name: Run tests
-        run: npm test
+        run: msbuild ./Pipeline.sln /t:Test
 
   deploy_staging:
     needs: test
     runs-on: windows-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Framework
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '4.x'
+
+      - name: Restore dependencies
+        run: nuget restore ./Pipeline.sln
+
       - name: Deploy to staging
         run: |
           # Replace this with your actual deployment commands
           echo "Deploying to staging environment..."
 
-  integration_test:
-    needs: deploy_staging
-    runs-on: windows-latest
- uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-    steps:
-      - name: Run integration tests
-        
-  deploy_production:
-    needs: integration_test
+  notify_failure:
+    needs: [build, test, deploy_staging]
     runs-on: windows-latest
 
     steps:
-      - name: Deploy to production
+      - name: Notify on failure
+        if: failure()
         run: |
-          # Replace this with your actual deployment commands
-          echo "Deploying to production environment..."
+          # Replace this with your actual notification mechanism
+          echo "Build or deployment failed. Sending notification..."
