@@ -57,7 +57,7 @@ jobs:
           dotnet-version: '6.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./pipeline/Pipeline.sln
+        run: dotnet restore ./pipelin/Pipeline.sln
 
       - name: Deploy to staging
         run: |
