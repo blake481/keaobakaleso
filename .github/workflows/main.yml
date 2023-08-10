@@ -45,7 +45,7 @@ jobs:
 
   deploy_staging:
     needs: test
-    runs-on: windows-latest
+    runs-on: windows-lates
 
     steps:
       - name: Checkout code
@@ -57,7 +57,7 @@ jobs:
           dotnet-version: '6.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./pipelin/Pipeline.sln
+        run: dotnet restore ./pipeline/Pipeline.sln
 
       - name: Deploy to staging
         run: |
